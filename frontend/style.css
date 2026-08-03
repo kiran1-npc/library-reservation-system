@@ -1,0 +1,195 @@
+.stApp {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(10, 14, 26, 0.88) 0%,
+      rgba(10, 14, 26, 0.93) 100%
+    ),
+    url("https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1600&q=60");
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+/* ---------- Fonts & Titles ---------- */
+h1 {
+  color: #ffffff;
+  font-family: "Georgia", serif;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  padding-bottom: 0.3rem;
+  border-bottom: 3px solid #ff8c42;
+  display: inline-block;
+}
+
+h2 {
+  color: #ff8c42;
+  font-family: "Georgia", serif;
+  font-weight: 700;
+}
+
+h3 {
+  color: #ffffff;
+  font-family: "Georgia", serif;
+}
+
+p,
+span,
+label,
+.stCaption,
+div[data-testid="stCaptionContainer"] {
+  color: #e8e8e8 !important;
+}
+
+/* ---------- Hero subtitle (used on the login screen) ---------- */
+.hero-subtitle {
+  font-size: 17px;
+  color: #f0f0f0 !important;
+  font-family: "Georgia", serif;
+  margin-top: -8px;
+  margin-bottom: 18px;
+}
+
+.hero-subtitle .accent {
+  color: #ff8c42;
+  font-weight: 700;
+}
+
+/* ---------- Sidebar ---------- */
+section[data-testid="stSidebar"] {
+  background: linear-gradient(180deg, #0a0e1a 0%, #14192b 100%);
+  border-right: 1px solid rgba(255, 140, 66, 0.2);
+}
+
+section[data-testid="stSidebar"] * {
+  color: #f0f2f6 !important;
+}
+
+section[data-testid="stSidebar"] .stTextInput input,
+section[data-testid="stSidebar"] .stNumberInput input {
+  background-color: #ffffff;
+  color: #16213e !important;
+  border-radius: 8px;
+  border: none;
+}
+
+section[data-testid="stSidebar"] .stButton button {
+  background-color: transparent;
+  color: #ff8c42 !important;
+  border: 1.5px solid #ff8c42;
+  font-weight: 700;
+}
+
+section[data-testid="stSidebar"] .stButton button:hover {
+  background-color: #ff8c42;
+  color: #0a0e1a !important;
+}
+
+section[data-testid="stSidebar"] .stFormSubmitButton button {
+  background-color: #ff8c42;
+  color: #0a0e1a !important;
+  border: none;
+  font-weight: 800;
+}
+
+section[data-testid="stSidebar"] .stFormSubmitButton button:hover {
+  background-color: #e6752a;
+}
+
+section[data-testid="stSidebar"] hr {
+  border-color: rgba(255, 140, 66, 0.25);
+}
+
+/* ---------- Cards (book containers + login card) ---------- */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+  border-radius: 16px !important;
+  border: 1px solid rgba(255, 140, 66, 0.25) !important;
+  background-color: rgba(22, 26, 40, 0.75);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transition: all 0.2s ease;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:hover {
+  box-shadow: 0 10px 26px rgba(255, 140, 66, 0.18);
+  border-color: #ff8c42 !important;
+  transform: translateY(-3px);
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"] h3 {
+  color: #ffffff !important;
+}
+
+/* ---------- Buttons (main content area) ---------- */
+.stButton button {
+  border-radius: 20px;
+  font-weight: 700;
+  border: 1.5px solid #ff8c42;
+  color: #ff8c42;
+  background-color: transparent;
+  transition: all 0.2s ease;
+  padding: 4px 18px;
+}
+
+.stButton button:hover {
+  background-color: #ff8c42;
+  color: #0a0e1a;
+  border: 1.5px solid #ff8c42;
+  box-shadow: 0 4px 14px rgba(255, 140, 66, 0.35);
+}
+
+/* Login / Register submit buttons — solid glowing orange */
+.stFormSubmitButton button {
+  background-color: #ff8c42;
+  color: #0a0e1a;
+  border: none;
+  font-weight: 800;
+  font-size: 15px;
+  box-shadow: 0 4px 16px rgba(255, 140, 66, 0.4);
+}
+
+.stFormSubmitButton button:hover {
+  background-color: #e6752a;
+  box-shadow: 0 6px 20px rgba(255, 140, 66, 0.55);
+}
+
+/* ---------- Radio toggle (Login / Register switch) ---------- */
+div[role="radiogroup"] label {
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 140, 66, 0.35);
+  border-radius: 20px;
+  padding: 4px 16px;
+  margin-right: 6px;
+}
+
+div[role="radiogroup"] label:has(input:checked) {
+  background-color: #ff8c42;
+  border-color: #ff8c42;
+}
+
+div[role="radiogroup"] label:has(input:checked) p {
+  color: #0a0e1a !important;
+  font-weight: 700;
+}
+
+.stTextInput input,
+.stNumberInput input,
+.stSelectbox div[data-baseweb="select"] {
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  color: #16213e !important;
+}
+
+.stTextInput input::placeholder {
+  color: #888888 !important;
+}
+
+/* ---------- Dividers ---------- */
+hr {
+  border-color: rgba(255, 140, 66, 0.25);
+}
+
+/* ---------- Success / Error boxes ---------- */
+div[data-testid="stAlert"] {
+  border-radius: 10px;
+}
