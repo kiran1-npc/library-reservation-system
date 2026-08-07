@@ -4,7 +4,7 @@ from datetime import date, datetime
 
 st.set_page_config(page_title="Library Reservation System", page_icon="📚", layout="wide")
 
-with open("frontend/style.css") as f:
+with open("style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 if "username" not in st.session_state:
@@ -65,10 +65,7 @@ if not st.session_state.username:
                         st.error(data.get("error", "Login failed"))
             else:
                 st.subheader("Create a new account")
-                st.caption(
-                    "⚠️ Use your **college ID number** as both your Username and Password "
-                    "(e.g. 38731). Numbers only, no letters."
-                )
+                st.caption("⚠️ Use your **4-digit college ID number** as both your Username and Password (e.g. 3873). Numbers only, no letters.")
                 with st.form("register_form", clear_on_submit=True):
                     reg_username = st.text_input("Choose a Username")
                     reg_password = st.text_input("Choose a Password", type="password")
@@ -112,17 +109,34 @@ with st.sidebar:
 
     if my_reservations:
         for r in my_reservations:
-            st.write(f"📘 **{r['book_title']}**")
-            if r["status"] == "reserved":
-                st.caption(f"Reserved on {r['reserved_on']} — waiting to be issued")
-            elif r["status"] == "issued":
-                left_days = days_left_for(r["issued_on"])
-                if left_days > 0:
-                    st.caption(f"Issued on {r['issued_on']} — due in {left_days} day{'s' if left_days != 1 else ''}")
+            if r["status"] == "cancelled":
+                continue  # don't clutter the sidebar with cancelled ones
+
+            rcol1, rcol2 = st.columns([3, 1])
+            with rcol1:
+                st.write(f"📘 **{r['book_title']}**")
+                if r["status"] == "reserved":
+                    st.caption(f"Reserved on {r['reserved_on']} — waiting to be issued")
+                elif r["status"] == "issued":
+                    left_days = days_left_for(r["issued_on"])
+                    if left_days > 0:
+                        st.caption(f"Issued on {r['issued_on']} — due in {left_days} day{'s' if left_days != 1 else ''}")
+                    else:
+                        st.caption(f"Issued on {r['issued_on']} — overdue by {abs(left_days)} day{'s' if abs(left_days) != 1 else ''}")
                 else:
-                    st.caption(f"Issued on {r['issued_on']} — overdue by {abs(left_days)} day{'s' if abs(left_days) != 1 else ''}")
-            else:
-                st.caption("Returned")
+                    st.caption("Returned")
+            with rcol2:
+                if r["status"] == "reserved":
+                    if st.button("Cancel", key=f"cancel_my_res_{r['id']}"):
+                        res = requests.post(
+                            f"http://127.0.0.1:8000/reservations/{r['id']}/cancel?username={st.session_state.username}"
+                        )
+                        data = res.json()
+                        if "message" in data:
+                            st.toast(data["message"], icon="🗑️")
+                        else:
+                            st.error(data.get("error", "Failed to cancel reservation"))
+                        st.rerun()
     else:
         st.caption("You haven't reserved any books yet.")
 
@@ -215,7 +229,7 @@ for book in books:
             book_reservations = res.json()
 
             for r in book_reservations:
-                rcol1, rcol2 = st.columns([3, 1])
+                rcol1, rcol2, rcol3 = st.columns([3, 1, 1])
                 with rcol1:
                     if r["status"] == "reserved":
                         st.write(f"👤 **{r['username']}** — reserved on {r['reserved_on']}")
@@ -250,4 +264,16 @@ for book in books:
                             data = res.json()
                             if "message" in data:
                                 st.toast(data["message"], icon="📥")
+                            st.rerun()
+                with rcol3:
+                    if r["status"] == "reserved":
+                        if st.button("Cancel", key=f"admin_cancel_{r['id']}"):
+                            res = requests.post(
+                                f"http://127.0.0.1:8000/reservations/{r['id']}/cancel?username={st.session_state.username}"
+                            )
+                            data = res.json()
+                            if "message" in data:
+                                st.toast(data["message"], icon="🗑️")
+                            else:
+                                st.error(data.get("error", "Failed to cancel reservation"))
                             st.rerun()
