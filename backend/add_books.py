@@ -1,57 +1,123 @@
+"""
+Run this once to fill the library with 100 sample books.
+From the project root, run:  python backend/seed_books.py
+"""
+
 from database import SessionLocal, Book
 
-books_data = [
-    ("Introduction to Algorithms", "Thomas H. Cormen", "CS/Technical", 5),
-    ("Clean Code", "Robert C. Martin", "CS/Technical", 4),
-    ("The Pragmatic Programmer", "Andrew Hunt", "CS/Technical", 4),
-    ("Python Crash Course", "Eric Matthes", "CS/Technical", 6),
-    ("Operating System Concepts", "Abraham Silberschatz", "CS/Technical", 4),
-    ("Computer Networks", "Andrew S. Tanenbaum", "CS/Technical", 3),
-    ("Database System Concepts", "Abraham Silberschatz", "CS/Technical", 4),
-    ("Design Patterns", "Erich Gamma", "CS/Technical", 3),
-    ("Cracking the Coding Interview", "Gayle Laakmann McDowell", "CS/Technical", 5),
-    ("Artificial Intelligence: A Modern Approach", "Stuart Russell", "CS/Technical", 3),
-    ("The Alchemist", "Paulo Coelho", "Fiction", 5),
-    ("To Kill a Mockingbird", "Harper Lee", "Fiction", 3),
-    ("1984", "George Orwell", "Fiction", 4),
-    ("The Great Gatsby", "F. Scott Fitzgerald", "Fiction", 3),
-    ("Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "Fiction", 6),
-    ("The Kite Runner", "Khaled Hosseini", "Fiction", 3),
-    ("Life of Pi", "Yann Martel", "Fiction", 3),
-    ("Five Point Someone", "Chetan Bhagat", "Fiction", 5),
-    ("Atomic Habits", "James Clear", "Self-Help", 6),
-    ("Think and Grow Rich", "Napoleon Hill", "Self-Help", 4),
-    ("The 7 Habits of Highly Effective People", "Stephen R. Covey", "Self-Help", 3),
-    ("Rich Dad Poor Dad", "Robert Kiyosaki", "Self-Help", 5),
-    ("Ikigai", "Hector Garcia", "Self-Help", 4),
-    ("Wings of Fire", "A.P.J. Abdul Kalam", "Biography", 5),
-    ("Steve Jobs", "Walter Isaacson", "Biography", 3),
-    ("Sapiens: A Brief History of Humankind", "Yuval Noah Harari", "History", 4),
-    ("The Diary of a Young Girl", "Anne Frank", "Biography", 3),
-    ("A Brief History of Time", "Stephen Hawking", "Science", 3),
-    ("The Selfish Gene", "Richard Dawkins", "Science", 3),
-    ("Fermat's Enigma", "Simon Singh", "Science", 3),
+# (title, author, genre)
+base_books = [
+    ("Python Basic", "John Smith", "Programming"),
+    ("Web Development 101", "Jane Doe", "Programming"),
+    ("Data Structures", "Alan Turing", "Computer Science"),
+    ("Clean Code", "Robert Martin", "Programming"),
+    ("The Pragmatic Programmer", "Andrew Hunt", "Programming"),
+    ("Eloquent JavaScript", "Marijn Haverbeke", "Programming"),
+    ("Cracking the Coding Interview", "Gayle Laakmann McDowell", "Programming"),
+    ("Design Patterns", "Erich Gamma", "Programming"),
+    ("Refactoring", "Martin Fowler", "Programming"),
+    ("The Mythical Man-Month", "Frederick Brooks", "Programming"),
+    ("Introduction to Algorithms", "Thomas Cormen", "Computer Science"),
+    ("Artificial Intelligence: A Modern Approach", "Stuart Russell", "Computer Science"),
+    ("Compilers: Principles, Techniques, and Tools", "Alfred Aho", "Computer Science"),
+    ("Introduction to Machine Learning", "Ethem Alpaydin", "Computer Science"),
+    ("Computer Organization and Design", "David Patterson", "Computer Science"),
+    ("Operating System Concepts", "Abraham Silberschatz", "Computer Science"),
+    ("Computer Networks", "Andrew Tanenbaum", "Computer Science"),
+    ("Database System Concepts", "Henry Korth", "Computer Science"),
+    ("Head First Design Patterns", "Eric Freeman", "Programming"),
+    ("You Don't Know JS", "Kyle Simpson", "Programming"),
+    ("The Alchemist", "Paulo Coelho", "Fiction"),
+    ("To Kill a Mockingbird", "Harper Lee", "Fiction"),
+    ("1984", "George Orwell", "Fiction"),
+    ("Animal Farm", "George Orwell", "Fiction"),
+    ("The Kite Runner", "Khaled Hosseini", "Fiction"),
+    ("Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "Fiction"),
+    ("The Great Gatsby", "F. Scott Fitzgerald", "Fiction"),
+    ("The Catcher in the Rye", "J.D. Salinger", "Fiction"),
+    ("Life of Pi", "Yann Martel", "Fiction"),
+    ("Atomic Habits", "James Clear", "Self-help"),
+    ("Deep Work", "Cal Newport", "Self-help"),
+    ("Think and Grow Rich", "Napoleon Hill", "Self-help"),
+    ("The 7 Habits of Highly Effective People", "Stephen Covey", "Self-help"),
+    ("Rich Dad Poor Dad", "Robert Kiyosaki", "Self-help"),
+    ("The Lean Startup", "Eric Ries", "Business"),
+    ("Zero to One", "Peter Thiel", "Business"),
+    ("Good to Great", "Jim Collins", "Business"),
+    ("The Innovator's Dilemma", "Clayton Christensen", "Business"),
+    ("Sapiens", "Yuval Noah Harari", "History"),
+    ("A Brief History of Time", "Stephen Hawking", "Science"),
+    ("The Selfish Gene", "Richard Dawkins", "Science"),
+    ("Cosmos", "Carl Sagan", "Science"),
+    ("Thinking, Fast and Slow", "Daniel Kahneman", "Psychology"),
+    ("Man's Search for Meaning", "Viktor Frankl", "Psychology"),
+    ("Wuthering Heights", "Emily Bronte", "Fiction"),
+    ("Pride and Prejudice", "Jane Austen", "Fiction"),
+    ("The Hobbit", "J.R.R. Tolkien", "Fiction"),
+    ("Fahrenheit 451", "Ray Bradbury", "Fiction"),
+    ("Brave New World", "Aldous Huxley", "Fiction"),
+    ("The Da Vinci Code", "Dan Brown", "Fiction"),
 ]
 
+publications = [
+    "O'Reilly Media", "Pearson", "Wiley", "Penguin Books",
+    "HarperCollins", "Oxford University Press", "McGraw Hill",
+    "Cambridge University Press", "Random House", "Springer"
+]
+
+books_to_add = []
+
+# Add every base book once, cycling through publications
+for i, (title, author, genre) in enumerate(base_books):
+    books_to_add.append({
+        "title": title,
+        "author": author,
+        "genre": genre,
+        "publication": publications[i % len(publications)],
+        "quantity": 3 + (i % 4)
+    })
+
+# Duplicate the first 25 titles with a DIFFERENT publication,
+# so some titles genuinely appear twice with different editions.
+for i, (title, author, genre) in enumerate(base_books[:25]):
+    alt_publication = publications[(i + 3) % len(publications)]
+    if alt_publication != publications[i % len(publications)]:
+        books_to_add.append({
+            "title": title,
+            "author": author,
+            "genre": genre,
+            "publication": alt_publication,
+            "quantity": 2 + (i % 3)
+        })
+
+# Repeat a few more with slight variation to comfortably reach ~100 rows
+extra_round = base_books[:25]
+for i, (title, author, genre) in enumerate(extra_round):
+    third_publication = publications[(i + 6) % len(publications)]
+    books_to_add.append({
+        "title": title,
+        "author": author,
+        "genre": genre,
+        "publication": third_publication,
+        "quantity": 2 + (i % 5)
+    })
+
 db = SessionLocal()
-
-for title, author, genre, qty in books_data:
-    existing = db.query(Book).filter(Book.title == title).first()
-    if existing:
-        print(f"Skipped (already exists): {title}")
-        continue
-
+added = 0
+for b in books_to_add:
     book = Book(
-        title=title,
-        author=author,
-        genre=genre,
-        available_quantity=qty,
+        title=b["title"],
+        author=b["author"],
+        genre=b["genre"],
+        publication=b["publication"],
+        available_quantity=b["quantity"],
         reserved_quantity=0,
         issued_quantity=0
     )
     db.add(book)
-    print(f"Added: {title}")
+    added += 1
 
 db.commit()
 db.close()
-print("\nDone! All books added.")
+
+print(f"Seeded {added} books into the database.")
