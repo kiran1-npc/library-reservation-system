@@ -11,7 +11,7 @@ if "username" not in st.session_state:
     st.session_state.username = None
     st.session_state.role = None
 
-BASE_URL = "http://127.0.0.1:8000"
+BASE_URL = "https://library-reservation-system-2vxi.onrender.com"
 
 BADGE_STYLE = (
     "display:inline-block; padding:4px 14px; border-radius:14px; "
